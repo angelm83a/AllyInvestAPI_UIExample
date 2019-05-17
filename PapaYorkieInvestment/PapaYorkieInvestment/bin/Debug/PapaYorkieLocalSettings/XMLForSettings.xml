@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<ApplicationSettings>
+  <LocalConfiguration>
+    <oauth_consumer_key />
+    <oauth_consumer_secret />
+    <oauth_token />
+    <oauth_token_secret />
+    <MainURL>https://api.tradeking.com/v1/accounts.xml</MainURL>
+    <URLRoot />
+    <URLFolder />
+    <URLFileName />
+    <URLSymbols />
+    <SaveFilePath />
+  </LocalConfiguration>
+</ApplicationSettings>
