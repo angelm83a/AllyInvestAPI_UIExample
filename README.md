@@ -26,7 +26,7 @@ var oauth_token_secret = "YDG_YOUR_OWN_KEY_HERE_Mo80";
  ```
 ### Example Result
 This is an example of the output:
-![alt text](https://raw.githubusercontent.com/angelm83a/AllyBankAPIExample/master/resultXML.png)
+![alt text](https://raw.githubusercontent.com/angelm83a/AllyInvestAPI_UIExample/master/PapaYorkieUI.png)
 
 ### More Help
 
