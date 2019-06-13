@@ -20,3 +20,4 @@ C:\VS\VS19\PapaYorkieInvestment\PapaYorkieInvestment\obj\Release\PapaYorkieInves
 C:\VS\VS19\PapaYorkieInvestment\PapaYorkieInvestment\obj\Release\PapaYorkieInvestment.csproj.CopyComplete
 C:\VS\VS19\PapaYorkieInvestment\PapaYorkieInvestment\obj\Release\PapaYorkieInvestment.exe
 C:\VS\VS19\PapaYorkieInvestment\PapaYorkieInvestment\obj\Release\PapaYorkieInvestment.pdb
+C:\VS\VS19\PapaYorkieInvestment\PapaYorkieInvestment\obj\Release\PapaYorkieInvestment.csprojAssemblyReference.cache

@@ -23,15 +23,26 @@ namespace PapaYorkieInvestment
         //public string _SettingsPATH = @"PapaYorkieLocalSettings\XMLForSettings.xml";
 
         Timer t = new Timer();
- 
-        public static string getResponseToSave = "";
 
+        //Timer to close down application
+        private System.Windows.Forms.Timer timerCloseApp;
+        private int counter = 10;
+
+        public static string getResponseToSave = "";
+        string _warnMessage = "";
+
+        ToolTip toolTip = new ToolTip();
         public YorkieMainForm()
         {
             InitializeComponent();
+            //Prevents users to enter any text. Set up in the visual part
+            //cbSetClosingTime.DropDownStyle = ComboBoxStyle.DropDownList;
+
             DisableComponents();
             ReadXMLForSettings();
 
+            //cbSetClosingTime.Text = "10";
+            cbSetClosingTime.Enabled = false;
             //if (File.Exists(_SettingsPATH)) {
             //    ReadXMLForSettings();
             //}
@@ -50,53 +61,87 @@ namespace PapaYorkieInvestment
         {
             //counts current time
             DateTime time = DateTime.UtcNow;
-            tsLabelTime.Text = time.ToLocalTime().ToString();            
+            tsLabelTime.Text = time.ToLocalTime().ToString();
         }
 
         private void BtnMakeCall_Click(object sender, EventArgs e)
         {
-            //clear box
-            txMessageBox.Text = "";
-            
-            //verify that all necessary strings are in place
-
-            if (txtURL.Text.Trim() == "")
+            VerifyBeforeMakeCall();
+        }
+        //Make call
+        public void MakeCall()
+        {
+            if (ckSaveWithMakeCall.Checked && txForFileName.Text.Trim() != "")
             {
-                txMessageBox.Text = "You are missing a valid URL string! Click on 'EDIT SETTINGS' and save.";
+                //MakeCall();
+                btnMakeCall.Enabled = false;
+                AsyncContext.Run(() => MainAsyncDoTransaction());
             }
-            else
-            if (txCKValue.Text.Trim() == "")
+            if (ckSaveWithMakeCall.Checked && txForFileName.Text.Trim() == "")
             {
-                txMessageBox.Text = "You are missing a valid consumer key (CK) string! Click on 'EDIT SETTINGS' and save.";
+                txMessageBox.Text = "Autosave content is enabled! You are missing your filename. Please type a filename!" + Environment.NewLine;
             }
-            else
-            if (txCSValue.Text.Trim() == "")
+            if (!ckSaveWithMakeCall.Checked && txForFileName.Text.Trim() == "")
             {
-                txMessageBox.Text = "You are missing a valid consumer secret (CS) string! Click on 'EDIT SETTINGS' and save.";
+                txMessageBox.Text = "You are missing your filename. Click on 'EDIT SETTINGS' and assign a filename!" + Environment.NewLine;
             }
-            else
-            if (txTKValue.Text.Trim() == "")
+            if (!ckSaveWithMakeCall.Checked && btnEditSettings.Text == "SAVE SETTINGS" && txForFileName.Text.Trim() == "")
             {
-                txMessageBox.Text = "You are missing a valid token (TK) string! Click on 'EDIT SETTINGS' and save.";
+                txMessageBox.Text = "You are missing your filename. Please type a filename!" + Environment.NewLine;
             }
-            else
-            if (txtURL.Text.Trim() == "")
+            if (!ckSaveWithMakeCall.Checked && txForFileName.Text.Trim() != "")
             {
-                txMessageBox.Text = "You are missing a valid token secret (TS) string! Click on 'EDIT SETTINGS' and save.";
-            }
-            else
-            if (txSavePath.Text.Trim() == "")
-            {
-                txMessageBox.Text = "You have not selected a location to save your XML file! Click on 'EDIT SETTINGS' and save.";
-            }
-            else
-            {
-                //execute
+                txMessageBox.Text += "Autosave content is disabled! Showing content from server. To save content, click on 'SAVE XML'." + Environment.NewLine;
+                //MakeCall();
                 btnMakeCall.Enabled = false;
                 AsyncContext.Run(() => MainAsyncDoTransaction());
             }
         }
-        //Make call
+
+        public void VerifyBeforeMakeCall()
+        {
+            //clear box
+            txMessageBox.Text = "";
+
+            //verify that all necessary strings are in place
+
+            if (txtURL.Text.Trim() == "")
+            {
+                txMessageBox.Text = "You are missing a valid URL string! Click on 'EDIT SETTINGS' and save." + Environment.NewLine;
+            }
+            else
+            if (txCKValue.Text.Trim() == "")
+            {
+                txMessageBox.Text = "You are missing a valid consumer key (CK) string! Click on 'EDIT SETTINGS' and save." + Environment.NewLine;
+            }
+            else
+            if (txCSValue.Text.Trim() == "")
+            {
+                txMessageBox.Text = "You are missing a valid consumer secret (CS) string! Click on 'EDIT SETTINGS' and save." + Environment.NewLine;
+            }
+            else
+            if (txTKValue.Text.Trim() == "")
+            {
+                txMessageBox.Text = "You are missing a valid token (TK) string! Click on 'EDIT SETTINGS' and save." + Environment.NewLine;
+            }
+            else
+            if (txtURL.Text.Trim() == "")
+            {
+                txMessageBox.Text = "You are missing a valid token secret (TS) string! Click on 'EDIT SETTINGS' and save." + Environment.NewLine;
+            }
+            else
+            if (txSavePath.Text.Trim() == "")
+            {
+                txMessageBox.Text = "You have not selected a location to save your XML file! Click on 'EDIT SETTINGS' and save." + Environment.NewLine;
+            }
+            else
+            {
+                MakeCall();
+                //execute
+                //btnMakeCall.Enabled = false;
+                //AsyncContext.Run(() => MainAsyncDoTransaction());
+            }
+        }
         public async void MainAsyncDoTransaction()
         {
             // oauth application keys
@@ -219,6 +264,15 @@ namespace PapaYorkieInvestment
             //var postBody = "status=" + Uri.EscapeDataString(status);
             var postBody = "Status = " + status;
             txMessageBox.Text = postBody + Environment.NewLine;
+            if (ckSaveWithMakeCall.Checked)
+            {
+                _warnMessage = "FILE: Autosave 'SAVE WITH MAKE CALL' content is enabled!";
+            }
+            else
+            {
+                _warnMessage = "FILE: Autosave 'SAVE WITH MAKE CALL' content is disabled!";
+            }
+            txMessageBox.Text += _warnMessage + Environment.NewLine;
             txMessageBox.Text += "Your URL: " + resource_url + Environment.NewLine;
             //Console.WriteLine(postBody);
 
@@ -239,7 +293,7 @@ namespace PapaYorkieInvestment
                 tsProgressBar.Value += 10;
                 txMessageBox.Text += "Waiting response from server..." + Environment.NewLine;
                 using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
-                {                   
+                {
 
                     //System.Threading.Thread.Sleep(500);
                     using (Stream stream = response.GetResponseStream())
@@ -249,12 +303,12 @@ namespace PapaYorkieInvestment
                         {
                             tsProgressBar.Value += 10;
                             System.Threading.Thread.Sleep(500);
-                            
+
                             //get response from server - reformat some lines
                             string responseStr = (await reader.ReadToEndAsync()).Replace("<response id", "\n<response id").Replace("<elapsedtime>", "\n<elapsedtime>").Replace("<error>", "\n<error>").Replace("</response>", "\n</response>");
                             tsProgressBar.Value += 40;
                             System.Threading.Thread.Sleep(700);
-                            
+
                             status = "SUCCESS!";
                             txMessageBox.Text += "Status: " + status + Environment.NewLine;
                             getResponseToSave = responseStr;
@@ -268,6 +322,19 @@ namespace PapaYorkieInvestment
                     }
                     response.Close();
                     tsProgressBar.Value = 0;
+
+                    //save results if enabled
+                    if (ckSaveWithMakeCall.Checked)
+                    {
+                        txMessageBox.Text += "Saving content as XML in your prefered location...";
+                        System.Threading.Thread.Sleep(1200);
+                        XMLSaveContent();
+                    }
+                    if (ckAutoClose.Checked)
+                    {
+                        System.Threading.Thread.Sleep(1200);
+                        StartClosingTimer();
+                    }
                 }
             }
             catch (WebException webExc)
@@ -327,12 +394,13 @@ namespace PapaYorkieInvestment
 
                 DisableComponents();
 
-                if (txCKValue.Text.Trim() != "" || txCSValue.Text.Trim() != "" || txSavePath.Text.Trim() != "" || txTKValue.Text.Trim() != "" || txTSValue.Text.Trim() != "" || txtURL.Text.Trim() != "") {
-                    CreateOrUpdateXMLSettings();
+                if (txCKValue.Text.Trim() != "" || txCSValue.Text.Trim() != "" || txSavePath.Text.Trim() != "" || txTKValue.Text.Trim() != "" || txTSValue.Text.Trim() != "" || txtURL.Text.Trim() != "")
+                {
+                    CreateOrUpdateXMLSettings(false);
                 }
                 else
                 {
-                    txMessageBox.Text = "All fields are empty. Nothing has been saved!";
+                    txMessageBox.Text = "All fields are empty. Nothing has been saved!" + Environment.NewLine;
                 }
             }
         }
@@ -357,7 +425,15 @@ namespace PapaYorkieInvestment
 
             txSavePath.Enabled = false;
             btnSavePath.Enabled = false;
-            //txCKValue.Enabled = false;
+
+            //ckFileName.Enabled = false;
+            ckAutoClose.Enabled = false;
+            ckSaveWithMakeCall.Enabled = false;
+            txForFileName.Enabled = false;
+
+            txCKValue.Enabled = false;
+            ckAutoCallServer.Enabled = false;
+            cbSetClosingTime.Enabled = false;
         }
         public void EnableComponents()
         {
@@ -375,8 +451,65 @@ namespace PapaYorkieInvestment
             txSavePath.Enabled = true;
             btnSavePath.Enabled = true;
             //txCKValue.Enabled = false;
+
+            //ckFileName.Enabled = true;
+            ckAutoClose.Enabled = true;
+            ckSaveWithMakeCall.Enabled = true;
+            txForFileName.Enabled = true;
+
+            ckAutoCallServer.Enabled = true;
+            cbSetClosingTime.Enabled = true;
+
+        }
+        private void CkAutoClose_CheckedChanged(object sender, EventArgs e)
+        {
+            EnableDisableAutoClose();
+        }
+        public void EnableDisableAutoClose()
+        {
+            if (ckAutoClose.Checked)
+            {
+                txMessageBox.Text += "Function to AUTOCLOSE application is ENABLED." + Environment.NewLine;
+
+                //cbSetClosingTime.Enabled = true;
+            }
+            else
+            {
+                txMessageBox.Text += "Function to AUTOCLOSE application is DISABLED." + Environment.NewLine;
+
+                //cbSetClosingTime.Enabled = false;
+            }
         }
 
+        //Timer to close down application
+        int selectedTime = 0;
+        public void StartClosingTimer()
+        {
+            timerCloseApp = new System.Windows.Forms.Timer();
+            timerCloseApp.Tick += new EventHandler(timerCloseApp_Tick);
+            //txMessageBox.Text = "Saved content as XML. Shutting down Papa Yorkie in " + counter.ToString() + "s" + "! Good bye!" + Environment.NewLine;
+            timerCloseApp.Interval = 1000; // 1 second
+            timerCloseApp.Start();
+            tsAutoCloseApp.Text = counter.ToString();
+
+            if (int.TryParse(cbSetClosingTime.Text, out selectedTime))
+            {
+                counter = selectedTime;
+            }
+            //tsAutoCloseApp.Text = "Closing application in: " + counter.ToString() + "s";
+        }
+
+        private void timerCloseApp_Tick(object sender, EventArgs e)
+        {
+            counter--;
+            txMessageBox.Text = "Saved content as XML. Shutting down Papa Yorkie in " + counter.ToString() + "s" + "! Good bye!" + Environment.NewLine;
+            tsAutoCloseApp.Text = "Closing Papa Yorkie in: " + counter.ToString() + "s";
+            if (counter == 0)
+            {
+                timerCloseApp.Stop();
+                Close();
+            }
+        }
         private void BtnClearURL_Click(object sender, EventArgs e)
         {
             txtURL.Text = "";
@@ -439,9 +572,10 @@ namespace PapaYorkieInvestment
             Close();
         }
 
-        private void CreateOrUpdateXMLSettings()
+        private void CreateOrUpdateXMLSettings(bool isCorrupted)
         {
             string _SettingsPATH = localUserPath + "\\";
+
             try
             {
                 //if (!Directory.Exists(@"PapaYorkieLocalSettings\"))
@@ -505,12 +639,63 @@ namespace PapaYorkieInvestment
                 writer.WriteString(txSavePath.Text.Trim());
                 writer.WriteEndElement();
 
+                //Save FILE NAME
+                writer.WriteStartElement("SaveFileName");
+                writer.WriteString(txForFileName.Text.Trim());
+                writer.WriteEndElement();
+
+                //Save autosave file
+                writer.WriteStartElement("SaveFileWithMakeCall");
+                if (ckSaveWithMakeCall.Checked)
+                {
+                    writer.WriteString("YES");                   
+                }
+                else
+                {
+                    writer.WriteString("NO");
+                }
+                writer.WriteEndElement();
+
+                //save autoclose setting 
+                writer.WriteStartElement("AutoCloseApplication");
+                if (ckAutoClose.Checked)
+                {
+                    writer.WriteString("YES");
+                }
+                else
+                {
+                    writer.WriteString("NO");
+                }
+                writer.WriteEndElement();
+
+                //SAVE TIME TO CLOSE
+                writer.WriteStartElement("SetAutoCloseTime");
+                writer.WriteString(cbSetClosingTime.Text.Trim());
+                writer.WriteEndElement();
+
+                //autoCall on launch
+                writer.WriteStartElement("AutoCallOnLaunch");
+                if (ckAutoCallServer.Checked)
+                {
+                    writer.WriteString("YES");
+                }
+                else
+                {
+                    writer.WriteString("NO");
+                }
+                writer.WriteEndElement();
+
                 //writer.WriteEndElement();
 
                 //all done
                 writer.Close();
 
-                txMessageBox.Text = "Your information has been saved!";
+                txMessageBox.Text = "Your information has been saved!" + Environment.NewLine;
+
+                if (isCorrupted)
+                {
+                    txMessageBox.Text = "The application settings were corrupted. An empty configuration file template was created. You will need to add new settings." + Environment.NewLine;
+                }
                 //MessageBox.Show("XML File created ! ");
                 //}
             }
@@ -519,8 +704,7 @@ namespace PapaYorkieInvestment
                 txMessageBox.Text = exc.ToString();
             }
         }
-
-        public void ReadXMLForSettings()
+        public void ReadXMLToReloadSettings()
         {
             //string _SettingsPATH = @"PapaYorkieLocalSettings\XMLForSettings.xml";
 
@@ -530,7 +714,7 @@ namespace PapaYorkieInvestment
                 if (!File.Exists(_SettingsPATH))
                 {
                     //CreateOrUpdateXMLSettings();
-                    txMessageBox.Text = "There are no settings available. Click on 'EDIT SETTINGS' and save.";
+                    txMessageBox.Text += "There are no settings available. Click on 'EDIT SETTINGS' and save." + Environment.NewLine;
                 }
                 else
                 {
@@ -544,14 +728,20 @@ namespace PapaYorkieInvestment
                     string _val4 = root.GetElementsByTagName("oauth_token_secret")[0].InnerText;
                     string _val5 = root.GetElementsByTagName("MainURL")[0].InnerText;
                     string _val6 = root.GetElementsByTagName("SaveFilePath")[0].InnerText;
+                    string _val7 = root.GetElementsByTagName("SaveFileName")[0].InnerText;
+                    string _val8 = root.GetElementsByTagName("SaveFileWithMakeCall")[0].InnerText;
+                    string _val9 = root.GetElementsByTagName("AutoCloseApplication")[0].InnerText;
+                    string _val11 = root.GetElementsByTagName("AutoCallOnLaunch")[0].InnerText;
+                    string _val10 = root.GetElementsByTagName("SetAutoCloseTime")[0].InnerText;
 
                     if (_val1 == "" && _val2 == "" && _val3 == "" && _val4 == "" && _val5 == "" && _val6 == "")
                     {
-                        txMessageBox.Text = "Please add settings to save. Reload setting function is empty.";
+                        txMessageBox.Text = "Please add settings to save. Reload setting function is empty." + Environment.NewLine;
                     }
                     else
                     if (_val1 != "" || _val2 != "" || _val3 != "" || _val4 != "" || _val5 != "" || _val6 != "")
                     {
+                        txMessageBox.Text = "Settings available loaded." + Environment.NewLine;
                         txCKValue.Text = root.GetElementsByTagName("oauth_consumer_key")[0].InnerText;
                         txCSValue.Text = root.GetElementsByTagName("oauth_consumer_secret")[0].InnerText;
                         txTKValue.Text = root.GetElementsByTagName("oauth_token")[0].InnerText;
@@ -563,13 +753,235 @@ namespace PapaYorkieInvestment
                         txtURLFolder.Text = root.GetElementsByTagName("URLFolder")[0].InnerText;
                         txtURLRoot.Text = root.GetElementsByTagName("URLRoot")[0].InnerText;
                         txtURLSymbols.Text = root.GetElementsByTagName("URLSymbols")[0].InnerText;
-
+                        txForFileName.Text = root.GetElementsByTagName("SaveFileName")[0].InnerText;
                         txSavePath.Text = root.GetElementsByTagName("SaveFilePath")[0].InnerText;
+
+                        int n;
+                        bool isNumeric = int.TryParse(_val10, out n);
+
+                        if (!isNumeric)
+                        {
+                            cbSetClosingTime.Text = "10"; //default
+                        }
+                        else
+                        {
+                            cbSetClosingTime.Text = root.GetElementsByTagName("SetAutoCloseTime")[0].InnerText;
+                        }
+
+                        if (_val8 != null)
+                        {
+                            if (_val8 == "YES")
+                            {
+                                ckSaveWithMakeCall.Checked = true;
+                                tsAutoSave.Text = "Autosave enabled: Yes";
+                            }
+                            else
+                            {
+                                ckSaveWithMakeCall.Checked = false;
+                                tsAutoSave.Text = "Autosave enabled: No";
+                            }
+                        }
+                        if (_val9 != null)
+                        {
+                            if (_val9 == "YES")
+                            {
+                                ckAutoClose.Checked = true;
+                                tsAutoCloseEnabled.Text = "Autoclose enabled: Yes";
+                            }
+                            else
+                            {
+                                ckAutoClose.Checked = false;
+                                tsAutoCloseEnabled.Text = "Autoclose enabled: No";
+                            }
+                        }
+                        if (_val11 != null)
+                        {
+                            if (_val11 == "YES")
+                            {
+                                ckAutoCallServer.Checked = true;
+                                tsAutoCallServer.Text = "Autocall server enabled: Yes";
+                            }
+                            else
+                            {
+                                ckAutoCallServer.Checked = false;
+                                tsAutoCallServer.Text = "Autocall server enabled: No";
+                            }
+                        }
                     }
                 }
             }
-            catch (Exception exc) {
-                txMessageBox.Text = exc.ToString();
+            catch (Exception exc)
+            {
+                if (exc.ToString().Contains("NullReferenceException"))
+                {
+                    CreateOrUpdateXMLSettings(true);
+                }
+                else
+                {
+                    txMessageBox.Text = exc.ToString();
+                }
+            }
+        }
+        public void ReadXMLForSettings()
+        {
+            //string _SettingsPATH = @"PapaYorkieLocalSettings\XMLForSettings.xml";
+
+            string _SettingsPATH = localUserPath + "\\" + @"PapaYorkieLocalSettings\XMLForSettings.xml";
+            try
+            {
+                if (!File.Exists(_SettingsPATH))
+                {
+                    //CreateOrUpdateXMLSettings();
+                    txMessageBox.Text += "There are no settings available. Click on 'EDIT SETTINGS' and save." + Environment.NewLine;
+                }
+                else
+                {
+                    valuesXMLSettings = new XmlDocument();
+                    valuesXMLSettings.Load(_SettingsPATH);
+                    root = valuesXMLSettings.DocumentElement;
+
+                    string _val1 = root.GetElementsByTagName("oauth_consumer_key")[0].InnerText;
+                    string _val2 = root.GetElementsByTagName("oauth_consumer_secret")[0].InnerText;
+                    string _val3 = root.GetElementsByTagName("oauth_token")[0].InnerText;
+                    string _val4 = root.GetElementsByTagName("oauth_token_secret")[0].InnerText;
+                    string _val5 = root.GetElementsByTagName("MainURL")[0].InnerText;
+                    string _val6 = root.GetElementsByTagName("SaveFilePath")[0].InnerText;
+                    string _val7 = root.GetElementsByTagName("SaveFileName")[0].InnerText;
+                    string _val8 = root.GetElementsByTagName("SaveFileWithMakeCall")[0].InnerText;
+                    string _val9 = root.GetElementsByTagName("AutoCloseApplication")[0].InnerText;
+                    string _val11 = root.GetElementsByTagName("AutoCallOnLaunch")[0].InnerText;
+                    string _val10 = root.GetElementsByTagName("SetAutoCloseTime")[0].InnerText;
+
+                    if (_val1 == "" && _val2 == "" && _val3 == "" && _val4 == "" && _val5 == "" && _val6 == "")
+                    {
+                        txMessageBox.Text = "Please add settings to save. Reload setting function is empty." + Environment.NewLine;
+                    }
+                    else
+                    if (_val1 != "" || _val2 != "" || _val3 != "" || _val4 != "" || _val5 != "" || _val6 != "")
+                    {
+                        txMessageBox.Text = "Settings available loaded." + Environment.NewLine;
+                        txCKValue.Text = root.GetElementsByTagName("oauth_consumer_key")[0].InnerText;
+                        txCSValue.Text = root.GetElementsByTagName("oauth_consumer_secret")[0].InnerText;
+                        txTKValue.Text = root.GetElementsByTagName("oauth_token")[0].InnerText;
+
+                        txTSValue.Text = root.GetElementsByTagName("oauth_token_secret")[0].InnerText;
+                        txtURL.Text = root.GetElementsByTagName("MainURL")[0].InnerText;
+                        txtURLFileName.Text = root.GetElementsByTagName("URLFileName")[0].InnerText;
+
+                        txtURLFolder.Text = root.GetElementsByTagName("URLFolder")[0].InnerText;
+                        txtURLRoot.Text = root.GetElementsByTagName("URLRoot")[0].InnerText;
+                        txtURLSymbols.Text = root.GetElementsByTagName("URLSymbols")[0].InnerText;
+                        txForFileName.Text = root.GetElementsByTagName("SaveFileName")[0].InnerText;
+                        txSavePath.Text = root.GetElementsByTagName("SaveFilePath")[0].InnerText;
+
+                        int n;
+                        bool isNumeric = int.TryParse(_val10, out n);
+
+                        if (!isNumeric)
+                        {
+                            cbSetClosingTime.Text = "10"; //default
+                        }
+                        else
+                        {
+                            cbSetClosingTime.Text = root.GetElementsByTagName("SetAutoCloseTime")[0].InnerText;
+                        }
+
+                        if (_val8 != null)
+                        {
+                            if (_val8 == "YES")
+                            {
+                                ckSaveWithMakeCall.Checked = true;
+                                tsAutoSave.Text = "Autosave enabled: Yes";
+                            }
+                            else
+                            {
+                                ckSaveWithMakeCall.Checked = false;
+                                tsAutoSave.Text = "Autosave enabled: No";
+                            }
+                        }
+                        if (_val9 != null) {
+                            if (_val9 == "YES")
+                            {
+                                ckAutoClose.Checked = true;
+                                tsAutoCloseEnabled.Text = "Autoclose enabled: Yes";
+                            }
+                            else
+                            {
+                                ckAutoClose.Checked = false;
+                                tsAutoCloseEnabled.Text = "Autoclose enabled: No";
+                            }
+                        }
+                        if (_val11 != null)
+                        {
+                            if (_val11 == "YES")
+                            {
+                                ckAutoCallServer.Checked = true;
+                                tsAutoCallServer.Text = "Autocall server enabled: Yes";
+                            }
+                            else
+                            {
+                                ckAutoCallServer.Checked = false;
+                                tsAutoCallServer.Text = "Autocall server enabled: No";
+                            }
+                        }
+                    }
+                }
+
+                //call server on launch
+                if (ckAutoCallServer.Checked)
+                {
+                    //VerifyBeforeMakeCall();
+                    StartCallOnLaunchTimer();
+                }
+            }
+            catch (Exception exc)
+            {
+                if (exc.ToString().Contains("NullReferenceException"))
+                {
+                    CreateOrUpdateXMLSettings(true);
+                }
+                else
+                {
+                    txMessageBox.Text = exc.ToString();
+                }
+            }
+        }
+
+        //Timer to execute and close application after data has been saved
+        private System.Windows.Forms.Timer timerExecuteOnCall;
+        private int ctrExecute = 10;
+
+        //Timer to close down application
+        public void StartCallOnLaunchTimer()
+        {
+            timerExecuteOnCall = new System.Windows.Forms.Timer();
+            timerExecuteOnCall.Tick += new EventHandler(timerExecuteOnCall_Tick);
+
+            if (ckAutoClose.Checked) {
+                txMessageBox.Text = "Papa Yorkie is calling the server... The application will close after a response is received and saved." + Environment.NewLine;
+            }
+            else
+            {
+                txMessageBox.Text = "Papa Yorkie is calling the server. The XML response will be saved." + Environment.NewLine;
+            }
+
+            timerExecuteOnCall.Interval = 1000; // 1 second
+            timerExecuteOnCall.Start();
+            //tsAutoCloseApp.Text = counter.ToString();
+
+            //tsAutoCloseApp.Text = "Closing application in: " + counter.ToString() + "s";
+        }
+        private void timerExecuteOnCall_Tick(object sender, EventArgs e)
+        {
+            ctrExecute--;
+            if (ctrExecute == 0)
+            {
+                timerExecuteOnCall.Stop();
+                //call server on launch
+                if (ckAutoCallServer.Checked)
+                {
+                    VerifyBeforeMakeCall();
+                }
             }
         }
 
@@ -577,11 +989,11 @@ namespace PapaYorkieInvestment
         {
             try
             {
-                ReadXMLForSettings();
+                ReadXMLToReloadSettings();
             }
             catch (Exception)
             {
-                txMessageBox.Text = "There are no settings available. Click on 'EDIT SETTINGS' and save.";
+                txMessageBox.Text = "There are no settings available. Click on 'EDIT SETTINGS' and save." + Environment.NewLine;
             }
         }
 
@@ -599,47 +1011,59 @@ namespace PapaYorkieInvestment
         {
             string _SaveContentPath = "";
 
-            if (getResponseToSave == "") {
-                txMessageBox.Text = "There is nothing to save. Click on 'MAKE CALL'.";
+            if (getResponseToSave == "")
+            {
+                txMessageBox.Text = "There is nothing to save. Click on 'MAKE CALL'." + Environment.NewLine;
             }
             else
             {
-                if (txSavePath.Text.Trim() != "")
+                if (txForFileName.Text.Trim() == "")
                 {
-                    tsProgressBar.Value += 10;
-                    System.Threading.Thread.Sleep(1000);
-                    string fileName = @"AllyInvest_" + RandomStringToken() + ".xml";
-                    _SaveContentPath = txSavePath.Text + "\\" + fileName;
-                    // This text is added only once to the file.
-                    try
-                    {
-                        if (!File.Exists(_SaveContentPath))
-                        {
-                            // Create a file to write to.
-                            using (StreamWriter sw = File.CreateText(_SaveContentPath))
-                            {
-                                tsProgressBar.Value += 10;
-                                txMessageBox.Text = "";
-                                sw.WriteLine(getResponseToSave);
-                                System.Threading.Thread.Sleep(1000);
-                                tsProgressBar.Value += 80;
-                                txMessageBox.Text = "Your XML file '" + fileName + "' has been saved in your prefered location: " + txSavePath.Text.Trim() + Environment.NewLine;
-
-                                txMessageBox.Text += getResponseToSave;
-                                tsProgressBar.Value = 0;
-                            }
-                        }
-                    }
-                    catch (Exception exc)
-                    {
-                        txMessageBox.Text = "Error: " + exc;
-                        tsProgressBar.Value = 0;
-                    }
+                    txMessageBox.Text = "You are missing to assign a filename. Please add a filename!" + Environment.NewLine;
                 }
                 else
                 {
-                    txMessageBox.Text = "You have not selected a path/folder to save your XML file. Click on 'EDIT SETTINGS' and select a path.";
-                    tsProgressBar.Value = 0;
+                    if (txSavePath.Text.Trim() != "")
+                    {
+                        tsProgressBar.Value += 10;
+                        System.Threading.Thread.Sleep(1000);
+                        //string fileName = @"AllyInvest_" + RandomStringToken() + ".xml";
+                        string fileName = txForFileName.Text.Trim() + ".xml";
+
+                        _SaveContentPath = txSavePath.Text + "\\" + fileName;
+                        // This text is added only once to the file.
+                        try
+                        {
+                            //if (!File.Exists(_SaveContentPath))
+                            //either exists or not, create or overwrite
+                            if (!File.Exists(_SaveContentPath) || File.Exists(_SaveContentPath))
+                            {
+                                // Create a file to write to.
+                                using (StreamWriter sw = File.CreateText(_SaveContentPath))
+                                {
+                                    tsProgressBar.Value += 10;
+                                    txMessageBox.Text = "";
+                                    sw.WriteLine(getResponseToSave);
+                                    System.Threading.Thread.Sleep(1000);
+                                    tsProgressBar.Value += 80;
+                                    txMessageBox.Text = "Your XML file '" + fileName + "' has been saved in your prefered location: " + txSavePath.Text.Trim() + Environment.NewLine;
+
+                                    txMessageBox.Text += getResponseToSave + Environment.NewLine;
+                                    tsProgressBar.Value = 0;
+                                }
+                            }
+                        }
+                        catch (Exception exc)
+                        {
+                            txMessageBox.Text = "Error: " + exc;
+                            tsProgressBar.Value = 0;
+                        }
+                    }
+                    else
+                    {
+                        txMessageBox.Text = "You have not selected a path/folder to save your XML file. Click on 'EDIT SETTINGS' and select a path." + Environment.NewLine;
+                        tsProgressBar.Value = 0;
+                    }
                 }
             }
         }
@@ -659,7 +1083,7 @@ namespace PapaYorkieInvestment
                 }
                 finalStringToken = new String(stringChars) + hourMinute;
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 txMessageBox.Text = exc.ToString();
             }
@@ -668,12 +1092,111 @@ namespace PapaYorkieInvestment
 
         private void HowToToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("I am still working on this!","HELP");
+            MessageBox.Show("I am still working on this!", "HELP");
         }
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("I am still working on this!", "ABOUT");
+        }
+
+        private void CkSaveWithMakeCall_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckSaveWithMakeCall.Checked)
+            {
+                txMessageBox.Text += "Function to 'Save with MAKE CALL' is ENABLED." + Environment.NewLine;
+            }
+            else
+            {
+                txMessageBox.Text += "Function to 'Save with MAKE CALL' is DISABLED." + Environment.NewLine;
+            }
+        }
+
+        private void TxtURL_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Enter a valid URL (example: https://api.tradeking.com)", txtURL);
+        }
+
+        private void TxtURLRoot_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Enter a valid parameter", txtURLRoot);
+        }
+
+        private void TxtURLFolder_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Enter a valid parameter", txtURLFolder);
+        }
+
+        private void TxtURLFileName_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Enter a valid parameter", txtURLFileName);
+        }
+
+        private void TxtURLSymbols_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Enter a valid parameter", txtURLSymbols);
+        }
+
+        private void TxCKValue_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Enter a valid consumer key value", txCKValue);
+        }
+
+        private void TxCSValue_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Enter a valid consumer secret value", txCSValue);
+        }
+
+        private void TxTKValue_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Enter a valid token value", txTKValue);
+        }
+
+        private void TxSavePath_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Click on 'Select Path' to select a folder to save your file", txSavePath);
+        }
+
+        private void TxTSValue_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Enter a valid token secret value", txTSValue);
+        }
+
+        private void TxForFileName_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Enter a valid filename", txForFileName);
+        }
+
+        private void CkSaveWithMakeCall_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Application will save file with MAKE CALL", ckSaveWithMakeCall);
+        }
+
+        private void CkAutoClose_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Application will auto close after call", ckAutoClose);
+        }
+
+        private void CkAutoCallServer_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Application will MAKE CALL next time is launched", ckAutoCallServer);
+        }
+
+        private void CbSetClosingTime_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.Show("Select closing time (in seconds)", cbSetClosingTime);
+        }
+
+        private void CkAutoCallServer_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckAutoCallServer.Checked)
+            {
+                txMessageBox.Text += "Function to AUTO CALL SERVER ON LAUNCH is ENABLED." + Environment.NewLine;
+            }
+            else
+            {
+                txMessageBox.Text += "Function to AUTO CALL SERVER ON LAUNCH is DISABLED." + Environment.NewLine;
+            }
         }
     }
 }

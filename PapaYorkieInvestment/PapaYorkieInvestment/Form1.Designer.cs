@@ -30,6 +30,12 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(YorkieMainForm));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.tsLabelTime = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.tsAutoSave = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsAutoCloseEnabled = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsAutoCallServer = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsAutoCloseApp = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,8 +76,13 @@
             this.btnSavePath = new System.Windows.Forms.Button();
             this.txSavePath = new System.Windows.Forms.TextBox();
             this.btnReloadSettings = new System.Windows.Forms.Button();
-            this.tsLabelTime = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tsProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.ckAutoClose = new System.Windows.Forms.CheckBox();
+            this.txForFileName = new System.Windows.Forms.TextBox();
+            this.ckSaveWithMakeCall = new System.Windows.Forms.CheckBox();
+            this.cbSetClosingTime = new System.Windows.Forms.ComboBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.ckAutoCallServer = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -80,12 +91,51 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsLabelTime,
-            this.tsProgressBar});
+            this.tsProgressBar,
+            this.tsAutoSave,
+            this.tsAutoCloseEnabled,
+            this.tsAutoCallServer,
+            this.tsAutoCloseApp});
             this.statusStrip1.Location = new System.Drawing.Point(0, 514);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(942, 22);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // tsLabelTime
+            // 
+            this.tsLabelTime.Name = "tsLabelTime";
+            this.tsLabelTime.Size = new System.Drawing.Size(37, 17);
+            this.tsLabelTime.Text = "Time ";
+            // 
+            // tsProgressBar
+            // 
+            this.tsProgressBar.Name = "tsProgressBar";
+            this.tsProgressBar.Size = new System.Drawing.Size(100, 16);
+            // 
+            // tsAutoSave
+            // 
+            this.tsAutoSave.Name = "tsAutoSave";
+            this.tsAutoSave.Size = new System.Drawing.Size(17, 17);
+            this.tsAutoSave.Text = "--";
+            // 
+            // tsAutoCloseEnabled
+            // 
+            this.tsAutoCloseEnabled.Name = "tsAutoCloseEnabled";
+            this.tsAutoCloseEnabled.Size = new System.Drawing.Size(17, 17);
+            this.tsAutoCloseEnabled.Text = "--";
+            // 
+            // tsAutoCallServer
+            // 
+            this.tsAutoCallServer.Name = "tsAutoCallServer";
+            this.tsAutoCallServer.Size = new System.Drawing.Size(17, 17);
+            this.tsAutoCallServer.Text = "--";
+            // 
+            // tsAutoCloseApp
+            // 
+            this.tsAutoCloseApp.Name = "tsAutoCloseApp";
+            this.tsAutoCloseApp.Size = new System.Drawing.Size(49, 17);
+            this.tsAutoCloseApp.Text = "              ";
             // 
             // menuStrip1
             // 
@@ -109,7 +159,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
@@ -154,7 +204,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(8, 84);
+            this.label2.Location = new System.Drawing.Point(8, 114);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(23, 13);
             this.label2.TabIndex = 2;
@@ -166,7 +216,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(7, 112);
+            this.label3.Location = new System.Drawing.Point(7, 142);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(23, 13);
             this.label3.TabIndex = 2;
@@ -178,7 +228,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(8, 138);
+            this.label4.Location = new System.Drawing.Point(8, 168);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(23, 13);
             this.label4.TabIndex = 2;
@@ -190,7 +240,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(7, 166);
+            this.label5.Location = new System.Drawing.Point(7, 196);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(23, 13);
             this.label5.TabIndex = 2;
@@ -200,51 +250,59 @@
             // 
             this.txtURL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtURL.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtURL.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtURL.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             this.txtURL.Location = new System.Drawing.Point(43, 53);
+            this.txtURL.Multiline = true;
             this.txtURL.Name = "txtURL";
-            this.txtURL.Size = new System.Drawing.Size(422, 24);
+            this.txtURL.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtURL.Size = new System.Drawing.Size(422, 52);
             this.txtURL.TabIndex = 1;
+            this.txtURL.MouseHover += new System.EventHandler(this.TxtURL_MouseHover);
             // 
             // txCKValue
             // 
             this.txCKValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txCKValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txCKValue.Location = new System.Drawing.Point(43, 81);
+            this.txCKValue.Location = new System.Drawing.Point(43, 111);
             this.txCKValue.Name = "txCKValue";
             this.txCKValue.Size = new System.Drawing.Size(722, 24);
             this.txCKValue.TabIndex = 7;
+            this.txCKValue.MouseHover += new System.EventHandler(this.TxCKValue_MouseHover);
             // 
             // txCSValue
             // 
             this.txCSValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txCSValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txCSValue.Location = new System.Drawing.Point(43, 109);
+            this.txCSValue.Location = new System.Drawing.Point(43, 139);
             this.txCSValue.Name = "txCSValue";
             this.txCSValue.Size = new System.Drawing.Size(722, 24);
             this.txCSValue.TabIndex = 9;
+            this.txCSValue.MouseHover += new System.EventHandler(this.TxCSValue_MouseHover);
             // 
             // txTKValue
             // 
             this.txTKValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txTKValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txTKValue.Location = new System.Drawing.Point(43, 135);
+            this.txTKValue.Location = new System.Drawing.Point(43, 165);
             this.txTKValue.Name = "txTKValue";
             this.txTKValue.Size = new System.Drawing.Size(722, 24);
             this.txTKValue.TabIndex = 11;
+            this.txTKValue.MouseHover += new System.EventHandler(this.TxTKValue_MouseHover);
             // 
             // txTSValue
             // 
             this.txTSValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txTSValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txTSValue.Location = new System.Drawing.Point(43, 163);
+            this.txTSValue.Location = new System.Drawing.Point(43, 193);
             this.txTSValue.Name = "txTSValue";
             this.txTSValue.Size = new System.Drawing.Size(722, 24);
             this.txTSValue.TabIndex = 13;
+            this.txTSValue.MouseHover += new System.EventHandler(this.TxTSValue_MouseHover);
             // 
             // label6
             // 
@@ -261,38 +319,54 @@
             // txtURLRoot
             // 
             this.txtURLRoot.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtURLRoot.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtURLRoot.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtURLRoot.ForeColor = System.Drawing.SystemColors.MenuText;
             this.txtURLRoot.Location = new System.Drawing.Point(471, 53);
+            this.txtURLRoot.Multiline = true;
             this.txtURLRoot.Name = "txtURLRoot";
-            this.txtURLRoot.Size = new System.Drawing.Size(69, 24);
+            this.txtURLRoot.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtURLRoot.Size = new System.Drawing.Size(69, 52);
             this.txtURLRoot.TabIndex = 2;
+            this.txtURLRoot.MouseHover += new System.EventHandler(this.TxtURLRoot_MouseHover);
             // 
             // txtURLFolder
             // 
             this.txtURLFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtURLFolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtURLFolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtURLFolder.ForeColor = System.Drawing.SystemColors.MenuText;
             this.txtURLFolder.Location = new System.Drawing.Point(546, 53);
+            this.txtURLFolder.Multiline = true;
             this.txtURLFolder.Name = "txtURLFolder";
-            this.txtURLFolder.Size = new System.Drawing.Size(69, 24);
+            this.txtURLFolder.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtURLFolder.Size = new System.Drawing.Size(69, 52);
             this.txtURLFolder.TabIndex = 3;
+            this.txtURLFolder.MouseHover += new System.EventHandler(this.TxtURLFolder_MouseHover);
             // 
             // txtURLFileName
             // 
             this.txtURLFileName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtURLFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtURLFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtURLFileName.ForeColor = System.Drawing.SystemColors.MenuText;
             this.txtURLFileName.Location = new System.Drawing.Point(621, 53);
+            this.txtURLFileName.Multiline = true;
             this.txtURLFileName.Name = "txtURLFileName";
-            this.txtURLFileName.Size = new System.Drawing.Size(69, 24);
+            this.txtURLFileName.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtURLFileName.Size = new System.Drawing.Size(69, 52);
             this.txtURLFileName.TabIndex = 4;
+            this.txtURLFileName.MouseHover += new System.EventHandler(this.TxtURLFileName_MouseHover);
             // 
             // txtURLSymbols
             // 
             this.txtURLSymbols.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtURLSymbols.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtURLSymbols.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtURLSymbols.ForeColor = System.Drawing.SystemColors.MenuText;
             this.txtURLSymbols.Location = new System.Drawing.Point(696, 53);
+            this.txtURLSymbols.Multiline = true;
             this.txtURLSymbols.Name = "txtURLSymbols";
-            this.txtURLSymbols.Size = new System.Drawing.Size(69, 24);
+            this.txtURLSymbols.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtURLSymbols.Size = new System.Drawing.Size(69, 52);
             this.txtURLSymbols.TabIndex = 5;
+            this.txtURLSymbols.MouseHover += new System.EventHandler(this.TxtURLSymbols_MouseHover);
             // 
             // label7
             // 
@@ -345,7 +419,7 @@
             this.btnClearURL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClearURL.Location = new System.Drawing.Point(772, 53);
             this.btnClearURL.Name = "btnClearURL";
-            this.btnClearURL.Size = new System.Drawing.Size(75, 23);
+            this.btnClearURL.Size = new System.Drawing.Size(75, 53);
             this.btnClearURL.TabIndex = 6;
             this.btnClearURL.Text = "CLEAR";
             this.btnClearURL.UseVisualStyleBackColor = false;
@@ -356,7 +430,7 @@
             this.btnClearCK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClearCK.BackColor = System.Drawing.Color.Silver;
             this.btnClearCK.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClearCK.Location = new System.Drawing.Point(772, 82);
+            this.btnClearCK.Location = new System.Drawing.Point(772, 112);
             this.btnClearCK.Name = "btnClearCK";
             this.btnClearCK.Size = new System.Drawing.Size(75, 23);
             this.btnClearCK.TabIndex = 8;
@@ -369,7 +443,7 @@
             this.btnClearCS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClearCS.BackColor = System.Drawing.Color.Silver;
             this.btnClearCS.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClearCS.Location = new System.Drawing.Point(772, 109);
+            this.btnClearCS.Location = new System.Drawing.Point(772, 139);
             this.btnClearCS.Name = "btnClearCS";
             this.btnClearCS.Size = new System.Drawing.Size(75, 23);
             this.btnClearCS.TabIndex = 10;
@@ -382,7 +456,7 @@
             this.btnClearTK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClearTK.BackColor = System.Drawing.Color.Silver;
             this.btnClearTK.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClearTK.Location = new System.Drawing.Point(772, 137);
+            this.btnClearTK.Location = new System.Drawing.Point(772, 167);
             this.btnClearTK.Name = "btnClearTK";
             this.btnClearTK.Size = new System.Drawing.Size(75, 23);
             this.btnClearTK.TabIndex = 12;
@@ -395,7 +469,7 @@
             this.btnClearTS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClearTS.BackColor = System.Drawing.Color.Silver;
             this.btnClearTS.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClearTS.Location = new System.Drawing.Point(772, 163);
+            this.btnClearTS.Location = new System.Drawing.Point(772, 193);
             this.btnClearTS.Name = "btnClearTS";
             this.btnClearTS.Size = new System.Drawing.Size(75, 23);
             this.btnClearTS.TabIndex = 14;
@@ -421,7 +495,7 @@
             this.btnSaveXML.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSaveXML.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.btnSaveXML.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSaveXML.Location = new System.Drawing.Point(167, 445);
+            this.btnSaveXML.Location = new System.Drawing.Point(133, 445);
             this.btnSaveXML.Name = "btnSaveXML";
             this.btnSaveXML.Size = new System.Drawing.Size(118, 66);
             this.btnSaveXML.TabIndex = 18;
@@ -434,11 +508,11 @@
             this.btnEditSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnEditSettings.BackColor = System.Drawing.Color.LightGoldenrodYellow;
             this.btnEditSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditSettings.Location = new System.Drawing.Point(494, 445);
+            this.btnEditSettings.Location = new System.Drawing.Point(381, 445);
             this.btnEditSettings.Name = "btnEditSettings";
             this.btnEditSettings.Size = new System.Drawing.Size(118, 66);
             this.btnEditSettings.TabIndex = 20;
-            this.btnEditSettings.Text = "&EDIT SETTINGS";
+            this.btnEditSettings.Text = "EDIT SETTINGS";
             this.btnEditSettings.UseVisualStyleBackColor = false;
             this.btnEditSettings.Click += new System.EventHandler(this.BtnEditSettings_Click);
             // 
@@ -447,7 +521,7 @@
             this.btnClearMessageBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnClearMessageBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
             this.btnClearMessageBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClearMessageBox.Location = new System.Drawing.Point(329, 445);
+            this.btnClearMessageBox.Location = new System.Drawing.Point(257, 445);
             this.btnClearMessageBox.Name = "btnClearMessageBox";
             this.btnClearMessageBox.Size = new System.Drawing.Size(118, 66);
             this.btnClearMessageBox.TabIndex = 19;
@@ -458,7 +532,7 @@
             // btnExit
             // 
             this.btnExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExit.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnExit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.btnExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExit.Location = new System.Drawing.Point(813, 445);
             this.btnExit.Name = "btnExit";
@@ -471,13 +545,14 @@
             // btnClearAll
             // 
             this.btnClearAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearAll.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.btnClearAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClearAll.Location = new System.Drawing.Point(853, 53);
             this.btnClearAll.Name = "btnClearAll";
-            this.btnClearAll.Size = new System.Drawing.Size(78, 134);
+            this.btnClearAll.Size = new System.Drawing.Size(78, 164);
             this.btnClearAll.TabIndex = 15;
             this.btnClearAll.Text = "C&LEAR ALL";
-            this.btnClearAll.UseVisualStyleBackColor = true;
+            this.btnClearAll.UseVisualStyleBackColor = false;
             this.btnClearAll.Click += new System.EventHandler(this.BtnClearAll_Click);
             // 
             // txMessageBox
@@ -486,9 +561,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txMessageBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txMessageBox.Location = new System.Drawing.Point(9, 193);
+            this.txMessageBox.Location = new System.Drawing.Point(9, 229);
             this.txMessageBox.Name = "txMessageBox";
-            this.txMessageBox.Size = new System.Drawing.Size(921, 213);
+            this.txMessageBox.Size = new System.Drawing.Size(921, 177);
             this.txMessageBox.TabIndex = 16;
             this.txMessageBox.Text = "";
             // 
@@ -496,6 +571,7 @@
             // 
             this.btnSavePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSavePath.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnSavePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSavePath.Location = new System.Drawing.Point(9, 412);
             this.btnSavePath.Name = "btnSavePath";
             this.btnSavePath.Size = new System.Drawing.Size(118, 23);
@@ -511,15 +587,16 @@
             this.txSavePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txSavePath.Location = new System.Drawing.Point(133, 411);
             this.txSavePath.Name = "txSavePath";
-            this.txSavePath.Size = new System.Drawing.Size(797, 24);
+            this.txSavePath.Size = new System.Drawing.Size(366, 24);
             this.txSavePath.TabIndex = 10;
+            this.txSavePath.MouseHover += new System.EventHandler(this.TxSavePath_MouseHover);
             // 
             // btnReloadSettings
             // 
             this.btnReloadSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnReloadSettings.BackColor = System.Drawing.Color.PaleTurquoise;
             this.btnReloadSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReloadSettings.Location = new System.Drawing.Point(658, 445);
+            this.btnReloadSettings.Location = new System.Drawing.Point(505, 445);
             this.btnReloadSettings.Name = "btnReloadSettings";
             this.btnReloadSettings.Size = new System.Drawing.Size(118, 66);
             this.btnReloadSettings.TabIndex = 21;
@@ -527,16 +604,94 @@
             this.btnReloadSettings.UseVisualStyleBackColor = false;
             this.btnReloadSettings.Click += new System.EventHandler(this.btnReloadSettings_Click);
             // 
-            // tsLabelTime
+            // ckAutoClose
             // 
-            this.tsLabelTime.Name = "tsLabelTime";
-            this.tsLabelTime.Size = new System.Drawing.Size(37, 17);
-            this.tsLabelTime.Text = "Time ";
+            this.ckAutoClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ckAutoClose.AutoSize = true;
+            this.ckAutoClose.Location = new System.Drawing.Point(629, 468);
+            this.ckAutoClose.Name = "ckAutoClose";
+            this.ckAutoClose.Size = new System.Drawing.Size(128, 17);
+            this.ckAutoClose.TabIndex = 23;
+            this.ckAutoClose.Text = "Autoclose Application";
+            this.ckAutoClose.UseVisualStyleBackColor = true;
+            this.ckAutoClose.CheckedChanged += new System.EventHandler(this.CkAutoClose_CheckedChanged);
+            this.ckAutoClose.MouseHover += new System.EventHandler(this.CkAutoClose_MouseHover);
             // 
-            // tsProgressBar
+            // txForFileName
             // 
-            this.tsProgressBar.Name = "tsProgressBar";
-            this.tsProgressBar.Size = new System.Drawing.Size(100, 16);
+            this.txForFileName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txForFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txForFileName.Location = new System.Drawing.Point(568, 410);
+            this.txForFileName.Name = "txForFileName";
+            this.txForFileName.Size = new System.Drawing.Size(189, 24);
+            this.txForFileName.TabIndex = 10;
+            this.txForFileName.MouseHover += new System.EventHandler(this.TxForFileName_MouseHover);
+            // 
+            // ckSaveWithMakeCall
+            // 
+            this.ckSaveWithMakeCall.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ckSaveWithMakeCall.AutoSize = true;
+            this.ckSaveWithMakeCall.Location = new System.Drawing.Point(629, 445);
+            this.ckSaveWithMakeCall.Name = "ckSaveWithMakeCall";
+            this.ckSaveWithMakeCall.Size = new System.Drawing.Size(135, 17);
+            this.ckSaveWithMakeCall.TabIndex = 24;
+            this.ckSaveWithMakeCall.Text = "Save with MAKE CALL";
+            this.ckSaveWithMakeCall.UseVisualStyleBackColor = true;
+            this.ckSaveWithMakeCall.CheckedChanged += new System.EventHandler(this.CkSaveWithMakeCall_CheckedChanged);
+            this.ckSaveWithMakeCall.MouseHover += new System.EventHandler(this.CkSaveWithMakeCall_MouseHover);
+            // 
+            // cbSetClosingTime
+            // 
+            this.cbSetClosingTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cbSetClosingTime.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSetClosingTime.FormattingEnabled = true;
+            this.cbSetClosingTime.Items.AddRange(new object[] {
+            "5",
+            "10",
+            "20",
+            "30",
+            "40",
+            "50",
+            "60"});
+            this.cbSetClosingTime.Location = new System.Drawing.Point(696, 487);
+            this.cbSetClosingTime.Name = "cbSetClosingTime";
+            this.cbSetClosingTime.Size = new System.Drawing.Size(61, 21);
+            this.cbSetClosingTime.TabIndex = 25;
+            this.cbSetClosingTime.MouseHover += new System.EventHandler(this.CbSetClosingTime_MouseHover);
+            // 
+            // label11
+            // 
+            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(505, 418);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(57, 13);
+            this.label11.TabIndex = 26;
+            this.label11.Text = "Filename";
+            // 
+            // label12
+            // 
+            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(629, 492);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(66, 13);
+            this.label12.TabIndex = 27;
+            this.label12.Text = "Closing in (s)";
+            // 
+            // ckAutoCallServer
+            // 
+            this.ckAutoCallServer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ckAutoCallServer.AutoSize = true;
+            this.ckAutoCallServer.Location = new System.Drawing.Point(813, 410);
+            this.ckAutoCallServer.Name = "ckAutoCallServer";
+            this.ckAutoCallServer.Size = new System.Drawing.Size(121, 17);
+            this.ckAutoCallServer.TabIndex = 28;
+            this.ckAutoCallServer.Text = "AutoCall On Launch";
+            this.ckAutoCallServer.UseVisualStyleBackColor = true;
+            this.ckAutoCallServer.CheckedChanged += new System.EventHandler(this.CkAutoCallServer_CheckedChanged);
+            this.ckAutoCallServer.MouseHover += new System.EventHandler(this.CkAutoCallServer_MouseHover);
             // 
             // YorkieMainForm
             // 
@@ -544,6 +699,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ClientSize = new System.Drawing.Size(942, 536);
+            this.Controls.Add(this.ckAutoCallServer);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.cbSetClosingTime);
+            this.Controls.Add(this.ckSaveWithMakeCall);
+            this.Controls.Add(this.ckAutoClose);
             this.Controls.Add(this.btnSavePath);
             this.Controls.Add(this.txMessageBox);
             this.Controls.Add(this.btnExit);
@@ -563,6 +724,7 @@
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
+            this.Controls.Add(this.txForFileName);
             this.Controls.Add(this.txSavePath);
             this.Controls.Add(this.txTSValue);
             this.Controls.Add(this.txTKValue);
@@ -639,6 +801,17 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel tsLabelTime;
         private System.Windows.Forms.ToolStripProgressBar tsProgressBar;
+        private System.Windows.Forms.CheckBox ckAutoClose;
+        private System.Windows.Forms.TextBox txForFileName;
+        private System.Windows.Forms.CheckBox ckSaveWithMakeCall;
+        private System.Windows.Forms.ComboBox cbSetClosingTime;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.ToolStripStatusLabel tsAutoSave;
+        private System.Windows.Forms.ToolStripStatusLabel tsAutoCloseEnabled;
+        private System.Windows.Forms.ToolStripStatusLabel tsAutoCloseApp;
+        private System.Windows.Forms.CheckBox ckAutoCallServer;
+        private System.Windows.Forms.ToolStripStatusLabel tsAutoCallServer;
     }
 }
 
