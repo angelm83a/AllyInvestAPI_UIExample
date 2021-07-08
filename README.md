@@ -4,10 +4,10 @@ A simple C# UI for OAuth to be used with Ally Invest API or other compatible API
 Get from Ally Invest Bank an XML return with detailed balance and holding information for each account associated with a user.
 
 ## Disclaimer
-This software is not related to the bank, however, it has been developed based on their requirements placed in their website (see the links below). It is provided as-is for personal, academic and learning purposes.
+This software is supported by the bank, however, it has been developed based on their requirements placed in their website (see the links below). It is provided as-is for personal, academic and learning purposes.
 
 # Ally Invest
-Ally Invest API uses similar functionality that I found in some Twitter API example applications. So, I found it very helpful to use them and implement tthem for Ally Invest API. The bank provide examples in other languages such as Java, Node.js, PHP, R, and Ruby, but no C#. Here you have a simple one. All you need is to customize your own C# application. 
+Ally Invest API uses similar functionality that I found in some Twitter API example applications. So, I found it very helpful to use them and implement tthem for Ally Invest API. The bank provides examples in other languages such as Java, Node.js, PHP, R, and Ruby, but no C#. Here you have a simple one. All you need is to customize your own C# application.
 
 # Documentation
   - https://www.ally.com/api/invest/documentation/accounts-get/
